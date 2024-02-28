@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber IP lookup</title>
+  <style>
+    body {
+      background-color: #000000
+    }
+    body {
+      color: #b90000;
+      text-align: center
+    }
+    #ipDetails {
+      margin-top: 20px;
+    }
+    button {
+      background-color: #000000;
+      color: #b90000;
+      border: none
+    }
+    input {
+      background-color: #000000;
+      color: #b90000;
+      border-style: solid;
+      border-color: #b90000
+
+    }
+    strong {
+      color: #FFFC9B
+    }
+  </style>
+</head>
+<body>
+  <h1>IP Lookup</h1>
+  <input type="text" id="ipInput" placeholder="Enter IP address" />
+  <button onclick="getIPDetails()">Lookup</button>
+  <div id="ipDetails"></div>
+
+  <script>
+    function getIPDetails() {
+      const ip = document.getElementById('ipInput').value;
+      const apiURL = `https://ipapi.co/${ip}/json/`;
+
+      fetch(apiURL)
+        .then(response => {
+          if (response.ok){
+            return response.json();
+          } else {
+            throw new Error('Failed to get IP details');
+          }
+        })
+        .then(data => {
+          if ('error' in data) {
+            throw new Error(data.reason);
+          } else {
+            displayIPDetails(data);
+          }
+        })
+        .catch((error) => {
+          document.getElementById('ipDetails').textContent = error.message;
+        });
+    }
+
+    function displayIPDetails(data) {
+      document.getElementById('ipDetails').innerHTML = `
+        <h2>IP Details</h2>
+        <p><strong>IP:</strong> ${data.ip}</p>
+        <p><strong>Network:</strong> ${data.network}</p>
+        <p><strong>IP Version:</strong> ${data.version}</p>
+        <p><strong>City:</strong> ${data.city}</p>
+        <p><strong>Region:</strong> ${data.region} (${data.region_code})</p>
+        <p><strong>Country:</strong> ${data.country_name} (${data.country} - ${data.country_code_iso3})</p>
+        <p><strong>Country Capital:</strong> ${data.country_capital}</p>
+        <p><strong>Country TLD:</strong> ${data.country_tld}</p>
+        <p><strong>Continent Code:</strong> ${data.continent_code}</p>
+        <p><strong>In EU:</strong> ${data.in_eu}</p>
+        <p><strong>Postal Code:</strong> ${data.postal}</p>
+        <p><strong>Latitude:</strong> ${data.latitude}</p>
+        <p><strong>Longitude:</strong> ${data.longitude}</p>
+        <p><strong>Timezone:</strong> ${data.timezone}</p>
+        <p><strong>UTC Offset:</strong> ${data.utc_offset}</p>
+        <p><strong>Country Calling Code:</strong> ${data.country_calling_code}</p>
+        <p><strong>Currency:</strong> ${data.currency} (${data.currency_name})</p>
+        <p><strong>Languages:</strong> ${data.languages}</p>
+        <p><strong>Country Area:</strong> ${data.country_area} km²</p>
+        <p><strong>Country Population:</strong> ${data.country_population}</p>
+        <p><strong>ASN:</strong> ${data.asn}</p>
+        <p><strong>Organization:</strong> ${data.org}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
+
